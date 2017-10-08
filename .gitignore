@@ -1,0 +1,18 @@
+# This file is used to ignore files which are generated
+# ----------------------------------------------------------------------------
+
+*~
+*.autosave
+
+*.debug
+
+# Vim temporary files
+.*.swp
+
+# Python byte code
+*.pyc
+
+# Binaries
+# --------
+*.dll
+*.exe
