@@ -16,13 +16,12 @@ neurons_count = np.array([2, 1])
 net = Network(neurons_count, activation_functions)
 
 
-
 test = False
 while not test:
     test = True
     order = np.random.permutation(4)
     for i in range(4):
-        output = net.compute(pt[order[i]], activation_functions)
+        output = net.compute(pt[order[i]])
 
         if order[i] == 0:
             reference = -1
