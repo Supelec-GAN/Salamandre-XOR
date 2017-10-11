@@ -21,6 +21,9 @@ class Network:
             self._layers_list[i].compute(self._layers_list[i - 1].output)
         return self._layers_list[-1].output
 
+    def error(self, x, reference):
+        return np.sqrt(np.power(x, 2) - np.power(reference, 2))
+
     def backprop(self, delta, eta, inputs, reference):
         n = self._layers_count
         out_influence = self.derivate(delta, reference)
