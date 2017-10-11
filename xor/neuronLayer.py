@@ -32,16 +32,26 @@ class NeuronLayer:
     def backprop(self, out_influence, eta, input_layer):
         weight_influence = self.calculate_weight_influence(input_layer, out_influence)
         self.update_weights(eta, weight_influence)
+        bias_influence = self.calculate(out_influence)
+        self.update_bias(eta, bias_influence)
         in_influence = self.derivate_error(out_influence)
         return in_influence
 
     def update_weights(self, eta, weight_influence):
         self._weights = self._weights + eta*weight_influence
 
+    def update_bias(self, eta, bias_influence):
+        self._bias = self._bias + eta*bias_influence
+
     def calculate_weight_influence(self, input_layer, out_influence):
         S = self.activation_levels
         g_prime = self._activation_function.derivate(S)
         return np.dot(np.dot(input_layer, g_prime), out_influence)
+
+    def calculate_bias_influence(self, out_influence):
+        S = self.activation_levels
+        g_prime = self._activation_function.derivate(S)
+        return -np.dot(g_prime, out_influence)
 
     def derivate_error(self, out_influence):
         WT = np.transpose(self._weights)
