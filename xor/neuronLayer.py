@@ -29,12 +29,7 @@ class NeuronLayer:
         self.output = self._activation_function(self.activation_levels)
         return self.output
 
-    def derivate(self, delta):
-        return (self._activation_function(self.output) - self._activation_function(self.output + delta))/delta
-
-    def backprop(self, out_influence, eta, delta, input_layer, last=False):
-        if last:
-            out_influence = self.derivate(delta)
+    def backprop(self, out_influence, eta, input_layer):
         weight_influence = self.calculate_weight_influence(input_layer, out_influence)
         self.update_weights(eta, weight_influence)
         in_influence = self.derivate_error(out_influence)
