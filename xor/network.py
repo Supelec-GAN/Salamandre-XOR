@@ -22,7 +22,7 @@ class Network:
         return self._layers_list[-1].output
 
     def error(self, x, reference):
-        return np.sqrt(np.power(x, 2) - np.power(reference, 2))
+        return np.power(x - reference, 2)
 
     def backprop(self, delta, eta, inputs, reference):
         n = self._layers_count
