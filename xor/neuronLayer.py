@@ -4,10 +4,10 @@ import numpy as np
 class NeuronLayer:
     """Classe permettant de créer une couche de neurones"""
 
-    def __init__(self, input_size=1, output_size=1, activation_function=lambda x: x):
+    def __init__(self, function, input_size=1, output_size=1, ):
         self._weights = np.random.randn(input_size, output_size)
         self._bias = np.zeros((1, output_size))
-        self._activation_function = activation_function
+        self._activation_function = function.out()
         self.activation_levels = np.zeros(output_size)
         self.output = np.zeros(output_size)
 
