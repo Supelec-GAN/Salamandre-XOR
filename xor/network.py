@@ -20,3 +20,6 @@ class Network:
         for i in range(1, self._layers_count):
             self._layers_list[i].compute(self._layers_list[i-1].output)
         return self._layers_list[-1].output
+
+    def error(self, reference):
+        return np.sqrt(np.power(self._layers_list[-1].output, 2) - np.power(reference, 2))
