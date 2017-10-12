@@ -5,10 +5,10 @@ from xor.network import Network
 from function.sigmoid import Sigmoid
 
 
-pt1 = np.array([-1, -1])
-pt2 = np.array([-1, 1])
-pt3 = np.array([1, 1])
-pt4 = np.array([1, -1])
+pt1 = np.array([[-1, -1]])
+pt2 = np.array([[-1, 1]])
+pt3 = np.array([[1, 1]])
+pt4 = np.array([[1, -1]])
 pt = [pt1, pt2, pt3, pt4]
 
 activation_functions = np.array([Sigmoid(1)])

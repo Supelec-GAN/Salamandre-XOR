@@ -48,15 +48,16 @@ class NeuronLayer:
         g_prime = self._activation_function.derivate()(S)
         n = np.size(self.activation_levels)
         G = np.zeros(n)
-        for i in range(0, n - 1):
+        for i in range(0, n):
             G[i] = g_prime[i]
-        return np.dot(np.dot(input_layer, out_influence), G)
+        return np.dot(np.dot(np.transpose(G), input_layer), out_influence)
 
     def calculate_bias_influence(self, out_influence):
         S = self.activation_levels
         g_prime = self._activation_function.derivate()(S)
+        n = np.size(self.activation_levels)
         G = np.zeros(n)
-        for i in range(0, n - 1):
+        for i in range(0, n):
             G[i] = g_prime[i]
         return -np.dot(out_influence, G)
 
@@ -65,6 +66,6 @@ class NeuronLayer:
         g_prime = self._activation_function.derivate()(S)
         n = np.size(self.activation_levels)
         G = np.zeros(n)
-        for i in range(0, n - 1):
+        for i in range(0, n):
             G[i] = g_prime[i]
         return np.dot(np.dot(out_influence, G), self._weights)

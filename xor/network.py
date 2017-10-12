@@ -26,7 +26,8 @@ class Network:
 
     def backprop(self, delta, eta, inputs, reference):
         n = self._layers_count
-        out_influence = self.derivate(delta, reference)
+        out_influence = np.reshape(self.derivate(delta, reference), (1, np.size(reference)))
+
         input_layer = inputs
 
         if n > 1:
