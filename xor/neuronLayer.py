@@ -46,16 +46,25 @@ class NeuronLayer:
     def calculate_weight_influence(self, input_layer, out_influence):
         S = self.activation_levels
         g_prime = self._activation_function.derivate()(S)
-        import pdb; pdb.set_trace()  # breakpoint 92c92e07 //
-        return np.dot(np.dot(input_layer, g_prime), out_influence)
+        n = np.size(self.activation_levels)
+        G = np.zeros(n)
+        for i in range(0, n - 1):
+            G[i] = g_prime[i]
+        return np.dot(np.dot(input_layer, out_influence), G)
 
     def calculate_bias_influence(self, out_influence):
         S = self.activation_levels
         g_prime = self._activation_function.derivate()(S)
-        return -np.dot(g_prime, out_influence)
+        G = np.zeros(n)
+        for i in range(0, n - 1):
+            G[i] = g_prime[i]
+        return -np.dot(out_influence, G)
 
     def derivate_error(self, out_influence):
-        WT = np.transpose(self._weights)
         S = self.activation_levels
         g_prime = self._activation_function.derivate()(S)
-        return np.dot(np.dot(WT, g_prime), out_influence)
+        n = np.size(self.activation_levels)
+        G = np.zeros(n)
+        for i in range(0, n - 1):
+            G[i] = g_prime[i]
+        return np.dot(np.dot(out_influence, G), self._weights)
