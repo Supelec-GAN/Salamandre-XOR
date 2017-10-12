@@ -71,8 +71,8 @@ class NeuronLayer:
         n = np.size(self.activation_levels)
         # reshape pour le cas n=1, qui pose un problème avec np.dot
         G = np.reshape(np.diag(g_prime), (n, n))
-        debug_matrice = np.dot(np.transpose(input_layer), out_influence)
-        return np.dot(debug_matrice, G)
+        temp_matrice = np.dot(np.transpose(input_layer), out_influence)
+        return np.dot(temp_matrice, G)
 
     ##
     # @brief      Calculates the bias influence.
