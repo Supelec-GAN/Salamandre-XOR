@@ -34,6 +34,15 @@ class NeuronLayer:
         self.output = self._activation_function.out()(self.activation_levels)
         return self.output
 
+    ##
+    # @brief      Retropropagation au niveau d'une couche
+    #
+    # @param      out_influence  influence of output on the error
+    # @param      eta            The eta
+    # @param      input_layer    The input value of the layer
+    #
+    # @return     retourne influence of the input on the error
+    #
     def backprop(self, out_influence, eta, input_layer):
         weight_influence = self.calculate_weight_influence(input_layer, out_influence)
         self.update_weights(eta, weight_influence)
@@ -60,11 +69,9 @@ class NeuronLayer:
         S = self.activation_levels
         g_prime = self._activation_function.derivate()(S)
         n = np.size(self.activation_levels)
-        G = np.diag(g_prime)
-        print(g_prime, G, out_influence, input_layer)
-
-        print('plop')
-        debug_matrice = np.dot(np.transpose(input_layer),out_influence)
+        # reshape pour le cas n=1, qui pose un problème avec np.dot
+        G = np.reshape(np.diag(g_prime), (n, n))
+        debug_matrice = np.dot(np.transpose(input_layer), out_influence)
         return np.dot(debug_matrice, G)
 
     ##
@@ -78,7 +85,7 @@ class NeuronLayer:
         S = self.activation_levels
         g_prime = self._activation_function.derivate()(S)
         n = np.size(self.activation_levels)
-        G = np.diag(g_prime)
+        G = np.reshape(np.diag(g_prime), (n, n))
         return -np.dot(out_influence, G)
 
     ##
@@ -92,6 +99,5 @@ class NeuronLayer:
         S = self.activation_levels
         g_prime = self._activation_function.derivate()(S)
         n = np.size(self.activation_levels)
-        G = np.diag(g_prime)
-        #print(g_prime, G, out_influence, self._weights)
-        return np.dot(np.dot(out_influence, G), self._weights)
+        G = np.reshape(np.diag(g_prime), (n, n))
+        return np.dot(np.dot(out_influence, G), np.transpose(self._weights))

@@ -15,12 +15,16 @@ activation_functions = np.array([Sigmoid(1)])
 neurons_count = np.array([2, 1])
 net = Network(neurons_count, activation_functions)
 
+for layer in net._layers_list:
+    print(layer.weights)
 
 test = False
-while not test:
+count = 500
+while not test and count > 0:
     test = True
     order = np.random.permutation(4)
     for i in range(4):
+        count -= 1
         output = net.compute(pt[order[i]])
 
         if order[i] == 0:
@@ -31,3 +35,7 @@ while not test:
         if net.error(output, reference) > 0.25:
             test = False
         net.backprop(0.001, 0.2, pt[order[i]], reference)
+
+print('après apprentissage')
+for layer in net._layers_list:
+    print(layer.weights)

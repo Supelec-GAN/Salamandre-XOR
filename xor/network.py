@@ -28,13 +28,6 @@ class Network:
         n = self._layers_count
         out_influence = np.reshape(self.derivate(delta, reference), (1, np.size(reference)))
 
-        input_layer = inputs
-
-        if n > 1:
-            input_layer = self._layers_list[n - 2].output
-
-        out_influence = self._layers_list[n-1].backprop(out_influence, eta, input_layer)
-
         for i in range(n - 1, 1, -1):
             input_layer = self._layers_list[i - 1].output
             out_influence = self._layers_list[i].backprop(out_influence, eta, input_layer)
