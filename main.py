@@ -24,7 +24,7 @@ while not test:
         output = net.compute(pt[order[i]])
 
         if order[i] == 0:
-            reference = -1
+            reference = 0
         else:
             reference = 1
 
