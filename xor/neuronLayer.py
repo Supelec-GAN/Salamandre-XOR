@@ -61,6 +61,7 @@ class NeuronLayer:
         g_prime = self._activation_function.derivate()(S)
         n = np.size(self.activation_levels)
         G = np.diag(g_prime)
+        print(g_prime, G, out_influence, input_layer)
         return np.dot(np.dot(np.transpose(input_layer), out_influence), G)
 
     ##
@@ -89,4 +90,5 @@ class NeuronLayer:
         g_prime = self._activation_function.derivate()(S)
         n = np.size(self.activation_levels)
         G = np.diag(g_prime)
+        #print(g_prime, G, out_influence, self._weights)
         return np.dot(np.dot(out_influence, G), self._weights)
