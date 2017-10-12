@@ -24,6 +24,11 @@ class NeuronLayer:
     def weights(self):
         del self._weights
 
+    ##
+    # @brief      Calcul des sorties de la couche
+    #
+    # @param      inputs  Inputs
+
     def compute(self, inputs):
         self.activation_levels = np.dot(inputs, self._weights) - self._bias
         self.output = self._activation_function.out()(self.activation_levels)
@@ -43,6 +48,14 @@ class NeuronLayer:
     def update_bias(self, eta, bias_influence):
         self._bias = self._bias + eta*bias_influence
 
+    ##
+    # @brief      Calculates the weight influence.
+    #
+    # @param      input_layer    input of the last compute
+    # @param      out_influence  influence of output on the error
+    #
+    # @return     vecteur of same dimension than weights.
+    #
     def calculate_weight_influence(self, input_layer, out_influence):
         S = self.activation_levels
         g_prime = self._activation_function.derivate()(S)
@@ -52,6 +65,13 @@ class NeuronLayer:
             G[i] = g_prime[i]
         return np.dot(np.dot(np.transpose(G), input_layer), out_influence)
 
+    ##
+    # @brief      Calculates the bias influence.
+    #
+    # @param      out_influence  influence of output on the error
+    #
+    # @return     vector of dimension of bias vector.
+    #
     def calculate_bias_influence(self, out_influence):
         S = self.activation_levels
         g_prime = self._activation_function.derivate()(S)
@@ -61,6 +81,13 @@ class NeuronLayer:
             G[i] = g_prime[i]
         return -np.dot(out_influence, G)
 
+    ##
+    # @brief      Calculates the error derivation
+    #
+    # @param      out_influence  influence of output on the error
+    #
+    # @return     the error used in the recursive formula
+    #
     def derivate_error(self, out_influence):
         S = self.activation_levels
         g_prime = self._activation_function.derivate()(S)
