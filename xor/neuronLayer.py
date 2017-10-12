@@ -37,7 +37,7 @@ class NeuronLayer:
     def backprop(self, out_influence, eta, input_layer):
         weight_influence = self.calculate_weight_influence(input_layer, out_influence)
         self.update_weights(eta, weight_influence)
-        bias_influence = self.calculate(out_influence)
+        bias_influence = self.calculate_bias_influence(out_influence)
         self.update_bias(eta, bias_influence)
         in_influence = self.derivate_error(out_influence)
         return in_influence
@@ -60,10 +60,8 @@ class NeuronLayer:
         S = self.activation_levels
         g_prime = self._activation_function.derivate()(S)
         n = np.size(self.activation_levels)
-        G = np.zeros(n)
-        for i in range(0, n):
-            G[i] = g_prime[i]
-        return np.dot(np.dot(np.transpose(G), input_layer), out_influence)
+        G = np.diag(g_prime)
+        return np.dot(np.dot(np.transpose(input_layer), out_influence), G)
 
     ##
     # @brief      Calculates the bias influence.
@@ -92,7 +90,5 @@ class NeuronLayer:
         S = self.activation_levels
         g_prime = self._activation_function.derivate()(S)
         n = np.size(self.activation_levels)
-        G = np.zeros(n)
-        for i in range(0, n):
-            G[i] = g_prime[i]
+        G = np.diag(g_prime)
         return np.dot(np.dot(out_influence, G), self._weights)
