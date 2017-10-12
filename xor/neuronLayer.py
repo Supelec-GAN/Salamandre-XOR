@@ -62,7 +62,10 @@ class NeuronLayer:
         n = np.size(self.activation_levels)
         G = np.diag(g_prime)
         print(g_prime, G, out_influence, input_layer)
-        return np.dot(np.dot(np.transpose(input_layer), out_influence), G)
+
+        print('plop')
+        debug_matrice = np.dot(np.transpose(input_layer),out_influence)
+        return np.dot(debug_matrice, G)
 
     ##
     # @brief      Calculates the bias influence.

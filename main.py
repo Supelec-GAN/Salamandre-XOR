@@ -11,8 +11,8 @@ pt3 = np.array([[1, 1]])
 pt4 = np.array([[1, -1]])
 pt = [pt1, pt2, pt3, pt4]
 
-activation_functions = np.array([Sigmoid(1), Sigmoid(1)])
-neurons_count = np.array([2, 1, 1])
+activation_functions = np.array([Sigmoid(1)])
+neurons_count = np.array([2, 1])
 net = Network(neurons_count, activation_functions)
 
 
