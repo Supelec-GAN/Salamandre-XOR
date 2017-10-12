@@ -7,7 +7,7 @@ class NeuronLayer:
     def __init__(self, function, input_size=1, output_size=1, ):
         self._weights = np.random.randn(input_size, output_size)
         self._bias = np.zeros((1, output_size))
-        self._activation_function = function.out()
+        self._activation_function = function
         self.activation_levels = np.zeros(output_size)
         self.output = np.zeros(output_size)
 
@@ -26,7 +26,7 @@ class NeuronLayer:
 
     def compute(self, inputs):
         self.activation_levels = np.dot(inputs, self._weights) - self._bias
-        self.output = self._activation_function(self.activation_levels)
+        self.output = self._activation_function.out()(self.activation_levels)
         return self.output
 
     def backprop(self, out_influence, eta, input_layer):
@@ -45,16 +45,17 @@ class NeuronLayer:
 
     def calculate_weight_influence(self, input_layer, out_influence):
         S = self.activation_levels
-        g_prime = self._activation_function.derivate(S)
+        g_prime = self._activation_function.derivate()(S)
+        import pdb; pdb.set_trace()  # breakpoint 92c92e07 //
         return np.dot(np.dot(input_layer, g_prime), out_influence)
 
     def calculate_bias_influence(self, out_influence):
         S = self.activation_levels
-        g_prime = self._activation_function.derivate(S)
+        g_prime = self._activation_function.derivate()(S)
         return -np.dot(g_prime, out_influence)
 
     def derivate_error(self, out_influence):
         WT = np.transpose(self._weights)
         S = self.activation_levels
-        g_prime = self._activation_function.derivate(S)
+        g_prime = self._activation_function.derivate()(S)
         return np.dot(np.dot(WT, g_prime), out_influence)

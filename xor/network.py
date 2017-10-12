@@ -27,8 +27,12 @@ class Network:
     def backprop(self, delta, eta, inputs, reference):
         n = self._layers_count
         out_influence = self.derivate(delta, reference)
-        input_layer = self._layers_list[n - 1].output
-        out_influence = self._layers_list[n].backprop(out_influence, eta, input_layer)
+        input_layer = inputs
+
+        if n > 1:
+            input_layer = self._layers_list[n - 2].output
+
+        out_influence = self._layers_list[n-1].backprop(out_influence, eta, input_layer)
 
         for i in range(n - 1, 1, -1):
             input_layer = self._layers_list[i - 1].output

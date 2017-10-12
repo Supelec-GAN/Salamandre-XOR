@@ -31,4 +31,3 @@ while not test:
         if net.error(output, reference) > 0.25:
             test = False
         net.backprop(0.001, 0.2, pt[order[i]], reference)
-
