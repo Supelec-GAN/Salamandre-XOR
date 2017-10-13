@@ -11,7 +11,7 @@ pt3 = np.array([[1, 1]])
 pt4 = np.array([[1, -1]])
 pt = [pt1, pt2, pt3, pt4]
 
-activation_functions = np.array([Tanh(2/3)])
+activation_functions = np.array([Tanh(1.7159,2/3)])
 neurons_count = np.array([2, 1])
 net = Network(neurons_count, activation_functions)
 
@@ -26,9 +26,9 @@ training_batch_ord = (np.random.random(iterations_left)-0.5)*2
 while iterations_left > 0:
     output = net.compute([[training_batch_abs[iterations_left-1], training_batch_ord[iterations_left- 1]]])
     if training_batch_ord[iterations_left-1]*training_batch_abs[iterations_left-1] > 0:
-        reference = 1
+        reference = 1.7159
     else:
-        reference = 0
+        reference = -1.7159
     error_check = net.error(output, reference)
     net.backprop(0.01, 0.2, [[training_batch_abs[iterations_left-1], training_batch_ord[iterations_left - 1]]], reference)
     iterations_left -= 1
