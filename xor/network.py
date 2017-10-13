@@ -50,15 +50,16 @@ class Network:
 
     def backprop(self, delta, eta, inputs, reference):
         n = self._layers_count
-
-        # reshape nécessaire pour l'algèbre linéaire
         out_influence = self.derivate(delta, reference)
+        if n == 1:
+            self._layers_list[0].backprop(out_influence, eta, inputs)
+            return 0
+        else:
+            for i in range(n-1, 0, -1):
+                input_layer = self._layers_list[i - 1].output
+                out_influence = self._layers_list[i].backprop(out_influence, eta, input_layer)
 
-        for i in range(n - 1, 1, -1):
-            input_layer = self._layers_list[i - 1].output
-            out_influence = self._layers_list[i].backprop(out_influence, eta, input_layer)
-
-        self._layers_list[0].backprop(out_influence, eta, inputs)
+            self._layers_list[0].backprop(out_influence, eta, inputs)
 
     def derivate(self, delta, reference):
         return (self.error(self.output, reference) - self.error(self.output + delta, reference))/delta
