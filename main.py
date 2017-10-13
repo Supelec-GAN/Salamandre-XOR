@@ -13,7 +13,7 @@ pt = [pt1, pt2, pt3, pt4]
 
 delta = 0.01
 eta = 0.2
-activation_functions = np.array([Tanh(1.7159, 2/3), Tanh(1.7159, 2/3), Tanh(1.7159, 2/3)])
+activation_functions = np.array([Tanh(2/3), Tanh(1.7159, 2/3), Tanh(1.7159, 2/3)])
 neurons_count = np.array([2, 2, 3, 1])
 net = Network(neurons_count, activation_functions)
 
@@ -31,9 +31,9 @@ while iterations_left > 0:
                        [training_batch_ord[iterations_left-1]]])  # vecteur colonne
     output = net.compute(inputs)
     if training_batch_ord[iterations_left-1]*training_batch_abs[iterations_left-1] > 0:
-        reference = 1.7159
+        reference = 1
     else:
-        reference = -1.7159
+        reference = 0
     error_check = net.error(output, reference)
     net.backprop(delta, eta, inputs, reference)
     iterations_left -= 1
