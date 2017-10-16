@@ -27,12 +27,16 @@ def print_network(net):
 
 print_network(net)
 error_check = 1
-iterations_left = 10000
+iterations = 10000
+error_evolution = np.array([error_check])
+iterations_done = np.array([])
+iterations_left = iterations
 training_batch_abs = (np.random.random(iterations_left)-0.5)*2
 training_batch_ord = (np.random.random(iterations_left)-0.5)*2
 
 
 while iterations_left > 0:
+    iterations_done += [iterations - iterations_left]
 
     inputs = np.array([[training_batch_abs[iterations_left-1]],
                        [training_batch_ord[iterations_left-1]]])  # vecteur colonne
@@ -42,9 +46,14 @@ while iterations_left > 0:
     else:
         reference = +1.7159
     error_check = net.error(output, reference)
+    error_evolution += [error_check]
     net.backprop(delta, eta, inputs, reference)
     iterations_left -= 1
 
+plt.plot(iterations_done, error_check)
+plt.xlabel('Itérations éffectuées')
+plt.ylabel('erreur')
+plt.title("Evolution de l'erreur en fonction du temps")
 
 # test = False
 # count = 500
