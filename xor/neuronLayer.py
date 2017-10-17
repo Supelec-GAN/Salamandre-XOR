@@ -27,6 +27,19 @@ class NeuronLayer:
     def weights(self):
         del self._weights
 
+    @property
+    def bias(self):
+        """Get the current bias."""
+        return self._bias
+
+    @bias.setter
+    def bias(self, new_bias):
+        self._bias = new_bias
+
+    @bias.deleter
+    def bias(self):
+        del self._bias
+
     ##
     # @brief      Calcul des sorties de la couche
     #
@@ -46,16 +59,19 @@ class NeuronLayer:
     #
     # @return     retourne influence of the input on the error
     #
-    def backprop(self, out_influence, eta, input_layer):
+    def backprop(self, out_influence, eta, input_layer, next_weights):
+        out_influence = self.derivate_error(out_influence)
+
         weight_influence = self.calculate_weight_influence(input_layer, out_influence)
         self.update_weights(eta, weight_influence)
+
         bias_influence = self.calculate_bias_influence(out_influence)
         self.update_bias(eta, bias_influence)
-        in_influence = self.derivate_error(out_influence)
-        return in_influence
+
+        return out_influence
 
     def update_weights(self, eta, weight_influence):
-        self._weights = self._weights + eta*weight_influence
+        self._weights = self._weights - eta*weight_influence
 
     def update_bias(self, eta, bias_influence):
         self._bias = self._bias + eta*bias_influence
@@ -69,13 +85,7 @@ class NeuronLayer:
     # @return     vecteur of same dimension than weights.
     #
     def calculate_weight_influence(self, input_layer, out_influence):
-        activation = self.activation_levels
-        deriv_vector = self._activation_function.derivate()(activation)
-        n = np.size(self.activation_levels)
-        # reshape pour np.diag
-        deriv_diag = np.diag(np.reshape(deriv_vector, (n)))
-        temp_matrice = np.dot(out_influence, np.transpose(input_layer))
-        return np.dot(deriv_diag, temp_matrice)
+        return np.dot(out_influence, np.transpose(input_layer))
 
     ##
     # @brief      Calculates the bias influence.
@@ -85,12 +95,7 @@ class NeuronLayer:
     # @return     vector of dimension of bias vector.
     #
     def calculate_bias_influence(self, out_influence):
-        activation = self.activation_levels
-        deriv_vector = self._activation_function.derivate()(activation)
-        n = np.size(self.activation_levels)
-        # reshape pour np.diag
-        deriv_diag = np.diag(np.reshape(deriv_vector, (n)))
-        return -np.dot(deriv_diag, out_influence)
+        return out_influence
 
     ##
     # @brief      Calculates the error derivation
@@ -99,10 +104,19 @@ class NeuronLayer:
     #
     # @return     the error used in the recursive formula
     #
-    def derivate_error(self, out_influence):
+    def derivate_error(self, out_influence, next_weights):
         activation = self.activation_levels
         deriv_vector = self._activation_function.derivate()(activation)
         n = np.size(self.activation_levels)
         # reshape pour np.diag
         deriv_diag = np.diag(np.reshape(deriv_vector, (n)))
-        return np.dot(np.transpose(self._weights), np.dot(deriv_diag, out_influence))
+        # return np.dot(np.transpose(self._weights), np.dot(deriv_diag, out_influence))
+        return np.dot(deriv_diag, np.dot(np.transpose(next_weights), out_influence))
+
+    def init_derivate_error(self, reference):
+        activation = self.activation_levels
+        deriv_vector = self._activation_function.derivate()(activation)
+        n = np.size(self.activation_levels)
+        # reshape pour np.diag
+        deriv_diag = np.diag(np.reshape(deriv_vector, (n)))
+        return -2*deriv_diag*(reference-self.output)

@@ -50,16 +50,33 @@ class Network:
 
     def backprop(self, delta, eta, inputs, reference):
         n = self._layers_count
-        out_influence = self.derivate(delta, reference)
+        # out_influence = self.derivate(delta, reference)
         if n == 1:
-            self._layers_list[0].backprop(out_influence, eta, inputs)
-            return 0
+            input_layer = inputs
         else:
-            for i in range(n-1, 0, -1):
-                input_layer = self._layers_list[i - 1].output
-                out_influence = self._layers_list[i].backprop(out_influence, eta, input_layer)
+            input_layer = self._layers_list[-2].output
 
-            self._layers_list[0].backprop(out_influence, eta, inputs)
+        out_influence = self._layers_list[n-1].init_derivate_error(reference)
+        self._layers_list[n-1].update_weights(eta, self._layers_list[n-1].calculate_weight_influence(input_layer, out_influence))
+        self._layers_list[n-1].update_bias(eta, self._layers_list[n-1].calculate_bias_influence(out_influence))
+
+        for i in range(n-2, 0, -1):
+            input_layer = self._layers_list[i - 1].output
+            # out_influence = self._layers_list[i].backprop(out_influence, eta, input_layer, self._layers_list[i+1].weights)
+            out_influence = self._layers_list[i].derivate_error(out_influence, self._layers_list[i+1].weights)
+            self._layers_list[i].update_weights(eta, self._layers_list[i].calculate_weight_influence(input_layer, out_influence))
+            self._layers_list[i].update_bias(eta, self._layers_list[i].calculate_bias_influence(out_influence))
+
+        if n > 1:
+            input_layer = inputs
+
+            out_influence = self._layers_list[0].derivate_error(out_influence, self._layers_list[1].weights)
+            self._layers_list[0].update_weights(eta, self._layers_list[0].calculate_weight_influence(input_layer, out_influence))
+            self._layers_list[0].update_bias(eta, self._layers_list[0].calculate_bias_influence(out_influence))
 
     def derivate(self, delta, reference):
-        return (self.error(self.output, reference) - self.error(self.output + delta, reference))/delta
+        test = self._layers_list[-1].init_derivate_error(reference)
+        test2 = (self.error(self.output, reference) - self.error(self.output + delta, reference))/delta
+        # print(test, test2)
+        return test
+        # return -2*self._layers_list[-1]._activation_function.derivate()(self._layers_list[-1]._activation_levels)
