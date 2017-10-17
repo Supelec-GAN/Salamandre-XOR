@@ -36,7 +36,7 @@ training_batch_ord = (np.random.random(iterations_left)-0.5)*2
 
 
 while iterations_left > 0:
-    iterations_done += [iterations - iterations_left]
+    iterations_done = np.concatenate((iterations_done,[iterations - iterations_left]))
 
     inputs = np.array([[training_batch_abs[iterations_left-1]],
                        [training_batch_ord[iterations_left-1]]])  # vecteur colonne
@@ -46,7 +46,7 @@ while iterations_left > 0:
     else:
         reference = +1.7159
     error_check = net.error(output, reference)
-    error_evolution += [error_check]
+    error_evolution = np.concatenate((error_evolution,[error_check]))
     net.backprop(delta, eta, inputs, reference)
     iterations_left -= 1
 
