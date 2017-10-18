@@ -15,7 +15,11 @@ class Network:
     #
     def __init__(self, layers_neuron_count, layers_activation_function):
         self._layers_count = np.size(layers_neuron_count) - 1
-        self._layers_list = np.array(self._layers_count * [NeuronLayer(layers_activation_function[0])])
+        self._layers_list = np.array(
+                            self._layers_count * [NeuronLayer(
+                                                        layers_activation_function[0]
+                                                        )]
+                            )
         for i in range(0, self._layers_count):
             self._layers_list[i] = NeuronLayer(layers_activation_function[i],
                                                layers_neuron_count[i],
@@ -48,35 +52,34 @@ class Network:
     def error(self, x, reference):
         return np.linalg.norm(x - reference)
 
-    def backprop(self, delta, eta, inputs, reference):
+    def backprop(self, eta, inputs, reference):
         n = self._layers_count
-        # out_influence = self.derivate(delta, reference)
+        # Si l'entrée et la sortie sont la même couche
         if n == 1:
             input_layer = inputs
         else:
             input_layer = self._layers_list[-2].output
 
+        # On commence par la couche de sortie, avec initialisation de l'influence de la sortie
         out_influence = self._layers_list[n-1].init_derivate_error(reference)
-        self._layers_list[n-1].update_weights(eta, self._layers_list[n-1].calculate_weight_influence(input_layer, out_influence))
-        self._layers_list[n-1].update_bias(eta, self._layers_list[n-1].calculate_bias_influence(out_influence))
+        self._layers_list[n-1].backprop(out_influence, eta, input_layer)
 
+        # On remonte la propagation jusqu'à la 2ème couche (si elle existe)
         for i in range(n-2, 0, -1):
             input_layer = self._layers_list[i - 1].output
-            # out_influence = self._layers_list[i].backprop(out_influence, eta, input_layer, self._layers_list[i+1].weights)
-            out_influence = self._layers_list[i].derivate_error(out_influence, self._layers_list[i+1].weights)
-            self._layers_list[i].update_weights(eta, self._layers_list[i].calculate_weight_influence(input_layer, out_influence))
-            self._layers_list[i].update_bias(eta, self._layers_list[i].calculate_bias_influence(out_influence))
 
+            out_influence = self._layers_list[i].derivate_error(
+                                                out_influence,
+                                                self._layers_list[i+1].weights
+                                                )
+            self._layers_list[i].backprop(out_influence, eta, input_layer)
+
+        # On s'occupe de la couche d'entrée (si différente de couche de sortie)
         if n > 1:
             input_layer = inputs
 
-            out_influence = self._layers_list[0].derivate_error(out_influence, self._layers_list[1].weights)
-            self._layers_list[0].update_weights(eta, self._layers_list[0].calculate_weight_influence(input_layer, out_influence))
-            self._layers_list[0].update_bias(eta, self._layers_list[0].calculate_bias_influence(out_influence))
-
-    def derivate(self, delta, reference):
-        test = self._layers_list[-1].init_derivate_error(reference)
-        test2 = (self.error(self.output, reference) - self.error(self.output + delta, reference))/delta
-        # print(test, test2)
-        return test
-        # return -2*self._layers_list[-1]._activation_function.derivate()(self._layers_list[-1]._activation_levels)
+            out_influence = self._layers_list[0].derivate_error(
+                                                out_influence,
+                                                self._layers_list[1].weights
+                                                )
+            self._layers_list[0].backprop(out_influence, eta, input_layer)

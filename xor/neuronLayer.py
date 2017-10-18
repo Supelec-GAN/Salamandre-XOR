@@ -59,22 +59,19 @@ class NeuronLayer:
     #
     # @return     retourne influence of the input on the error
     #
-    def backprop(self, out_influence, eta, input_layer, next_weights):
-        out_influence = self.derivate_error(out_influence)
-
-        weight_influence = self.calculate_weight_influence(input_layer, out_influence)
+    def backprop(self, out_influence, eta, input_layer):
+        weight_influence = self.calculate_weight_influence(
+            input_layer, out_influence)
         self.update_weights(eta, weight_influence)
 
         bias_influence = self.calculate_bias_influence(out_influence)
         self.update_bias(eta, bias_influence)
 
-        return out_influence
-
     def update_weights(self, eta, weight_influence):
-        self._weights = self._weights - eta*weight_influence
+        self._weights = self._weights - eta * weight_influence
 
     def update_bias(self, eta, bias_influence):
-        self._bias = self._bias + eta*bias_influence
+        self._bias = self._bias + eta * bias_influence
 
     ##
     # @brief      Calculates the weight influence.
@@ -88,12 +85,7 @@ class NeuronLayer:
         return np.dot(out_influence, np.transpose(input_layer))
 
     ##
-    # @brief      Calculates the bias influence.
-    #
-    # @param      out_influence  influence of output on the error
-    #
-    # @return     vector of dimension of bias vector.
-    #
+    # @brief      Calculates the bias influence (whicj is out_influence)
     def calculate_bias_influence(self, out_influence):
         return out_influence
 
@@ -110,13 +102,19 @@ class NeuronLayer:
         n = np.size(self.activation_levels)
         # reshape pour np.diag
         deriv_diag = np.diag(np.reshape(deriv_vector, (n)))
-        # return np.dot(np.transpose(self._weights), np.dot(deriv_diag, out_influence))
         return np.dot(deriv_diag, np.dot(np.transpose(next_weights), out_influence))
 
+    ##
+    # @brief      Initiate the error derivation
+    #
+    # @param      reference  the expected output for the last computation
+    #
+    # @return     {an derivative based by default on quadratic error}
+    #
     def init_derivate_error(self, reference):
         activation = self.activation_levels
         deriv_vector = self._activation_function.derivate()(activation)
         n = np.size(self.activation_levels)
         # reshape pour np.diag
         deriv_diag = np.diag(np.reshape(deriv_vector, (n)))
-        return -2*deriv_diag*(reference-self.output)
+        return -2 * deriv_diag * (reference - self.output)
