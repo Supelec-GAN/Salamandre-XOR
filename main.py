@@ -13,7 +13,7 @@ pt = [pt1, pt2, pt3, pt4]
 eta = 0.01
 activation_functions = np.array(
     [Tanh(1.7159, 2 / 3), Tanh(1.7159, 2 / 3), Tanh(1.7159, 2 / 3)])
-neurons_count = np.array([2, 2, 2, 1])
+neurons_count = np.array([2, 2, 3, 1])
 net = Network(neurons_count, activation_functions)
 
 
@@ -96,13 +96,16 @@ print_network(net)
 print_error(reference_list, output_list, 20)
 print("il reste =", iterations_left)
 
-print("-1.7 attendu : ", net.compute(np.array(pt1)))
-print("1.7 attendu : ", net.compute(np.array(pt2)))
-print("-1.7 attendu : ", net.compute(np.array(pt3)))
-print("1.7 attendu : ", net.compute(np.array(pt4)))
+print("1 attendu : ", net.compute(np.array(pt1)))
+print("-1 attendu : ", net.compute(np.array(pt2)))
+print("1 attendu : ", net.compute(np.array(pt3)))
+print("-1 attendu : ", net.compute(np.array(pt4)))
 
 print_grid_net(net, 100)
 
 plt.plot([net.error(output_list[i], reference_list[i])
           for i in range(nb_iteration - 1, 0, -10)], 'o')
+plt.xlabel("Itérations")
+plt.ylabel("Erreur")
+plt.title("Evolution de l'erreur pendant l'apprentissage")
 plt.show()
