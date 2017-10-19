@@ -46,7 +46,10 @@ def learning_manager (batch, parrallel_learnings, activation_functions, neurons_
             net.backprop(eta, batch[iterations-iterations_left], reference)
             iterations_left -= 1
 
+    return errors
 
+
+def error_graphs(errors, iterations, parallel_learnings):
     mean_error = np.mean(errors, axis = 1)
     plt.plot(range(iterations), mean_error)
     plt.xlabel('Itérations')
