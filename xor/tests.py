@@ -17,3 +17,9 @@ for i in range(len(iterations)):
         for j in range(len(eta)):
                 batch = 2 * np.random.random_sample((iterations[i], 2)) - 1
                 errors[i][j] = learning_manager(batch, parallel_learnings, activation_functions, neurons_count, iterations[i], eta[j])
+
+
+
+file = open('resultats.py', 'w')
+file.write(str(errors))
+file.close
