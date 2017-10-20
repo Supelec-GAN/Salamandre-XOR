@@ -37,7 +37,9 @@ def learning_manager (batch, parrallel_learnings, activation_functions, neurons_
     for i in range(parrallel_learnings):
         net = Network(neurons_count, activation_functions)
 
-        while iterations_left > 0 and errors[i][-1] > 0.01 :
+        error_checkout = False
+
+        while iterations_left > 0 and not error_checkout:
             output = net.compute(batch[iterations-iterations_left])
             output_list[iterations-iterations_left][i] = output
             reference = fonction_test(batch[iterations-iterations_left])
@@ -45,6 +47,14 @@ def learning_manager (batch, parrallel_learnings, activation_functions, neurons_
             errors[iterations-iterations_left][i] = net.error(output,reference)
             net.backprop(eta, batch[iterations-iterations_left], reference)
             iterations_left -= 1
+
+            if i >= 10 :                                                            #verifier les dix dernieres erreurs
+                test = True                                                         #pour la condition d'arret
+                for j in range(10):                                                 #oui, c'est sale et a changer
+                    test = test*(errors[i-j][-1] <= 0.01)                           #mais il est 2h30 du mat et je ne
+                if test:                                                            #crois pas au any et au all pour
+                    error_checkout = True                                           #les inegalites
+
 
     return errors
 
