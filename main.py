@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from xor.network import Network
 from function.tanh import Tanh
 
+
 batch = 2 * np.random.random_sample((iterations, 2)) - 1
 
 # Set d'apprentissage pour le XOR, 4 points
@@ -16,7 +17,7 @@ eta = 0.01
 activation_functions = np.array(
     [Tanh(1.7159, 2 / 3), Tanh(1.7159, 2 / 3), Tanh(1.7159, 2 / 3)])
 neurons_count = np.array([2, 3, 2, 1])
-net = Network(neurons_count, activation_functions)
+    net = Network(neurons_count, activation_functions)
 
 
 def print_network(net):
