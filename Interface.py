@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 from xor.network import Network
 from function.tanh import Tanh
 
-def fonction_test (input) : #Renvoie la réference attendue, celle si est pour le XOR
-    if input[0]*input[1] > 0 :
+def fonction_test(input):       #Renvoie la réference attendue, celle ci est pour le XOR
+    if input[0]*input[1] > 0:
         return 1
-    else :
+    else:
         return -1
 
 
@@ -28,13 +28,13 @@ def print_grid_net(net, grid):
     plt.show()
 
 
-def learning_manager (batch, batch_test, parrallel_learnings, activation_functions, neurons_count, eta, test_period) :
+def learning_manager(batch, batch_test, parrallel_learnings, activation_functions, neurons_count, eta, test_period):
     iterations = len(batch)
     iterations_test = len(batch_test)
     iterations_left = iterations
     errors_during_learning = np.zeros((iterations, parrallel_learnings))
     errors_during_test = np.zeros((iterations_test, parrallel_learnings))
-    mean_error_during_test = np.rezos((iterations//test_period, parrallel_learnings))
+    mean_error_during_test = np.zeros((iterations//test_period, parrallel_learnings))
     output_list_learning = np.zeros((iterations, parrallel_learnings))
     output_list_test = np.zeros((iterations_test, parrallel_learnings))
     reference_list_learning = np.zeros((iterations, parrallel_learnings))
@@ -58,17 +58,25 @@ def learning_manager (batch, batch_test, parrallel_learnings, activation_functio
                     output_list_test[k][i] = output
                     reference = fonction_test(batch_test[k])
                     reference_list_test[k][i] = reference
-                    errors_during_test[k][i] = net.error(output,reference)
-                mean_error_during_test[iterations_left//test_period][i] = np.mean(errors_during_test, axis = 0)
+                    errors_during_test[k][i] = net.error(output, reference)
+                mean_error_during_test[iterations_left//test_period][i] = np.mean(errors_during_test, axis=0)
 
 
-plt.plot(range(len(batch)//test_period),[mean_error_during_test[k][-1] for k in range(len(mean_error_during_test))])
-plt.ylabel("Erreur moyenne sur le batch de test" )
-plt.xlabel ("Occurences des tests")
-plt.title("Evolution de l'erreur effectuée toutes les"+test_period+"itérations d'apprentissage")
+    abs_error_test =range(len(batch)//test_period)
+    ord_error_test = [mean_error_during_test[k][-1] for k in range(len(mean_error_during_test))]
+    abs_error_learning = range(iterations)
+    ord_error_learning = np.mean(errors_during_learning, axis=1)
 
-mean_error = np.mean(errors_during_learning, axis = 1)
-plt.plot(range(iterations), mean_error)
-plt.xlabel('Itérations')
-plt.ylabel('Erreur moyenne sur'+parrallel_learnings + "apprentissages")
-plt.title ("Evolution de l'erreur au fur et a mesure des apprentissages")
+    error_graphs(abs_error_test, ord_error_test, abs_error_learning, ord_error_learning)
+
+
+def error_graphs(abs_error_test, ord_error_test, abs_error_learning, ord_error_learning):
+    plt.plot(abs_error_test, ord_error_test)
+    plt.ylabel("Erreur moyenne sur le batch de test")
+    plt.xlabel("Occurences des tests")
+    plt.title("Evolution de l'erreur effectuée toutes les" + test_period + "itérations d'apprentissage")
+
+    plt.plot(abs_error_learning, ord_error_learning)
+    plt.xlabel('Itérations')
+    plt.ylabel('Erreur moyenne sur' + parrallel_learnings + "apprentissages")
+    plt.title("Evolution de l'erreur au fur et a mesure des apprentissages")
