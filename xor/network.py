@@ -36,6 +36,7 @@ class Network:
     # @return     La sortie de la dernière couche est la sortie finale
     #
     def compute(self, inputs):
+        inputs = np.reshape(inputs, (len(inputs),1))
         self._layers_list[0].compute(inputs)
         for i in range(1, self._layers_count):
             self._layers_list[i].compute(self._layers_list[i - 1].output)
@@ -53,6 +54,7 @@ class Network:
         return np.linalg.norm(x - reference)
 
     def backprop(self, eta, inputs, reference):
+        inputs = np.reshape(inputs, (len(inputs), 1))
         n = self._layers_count
         # Si l'entrée et la sortie sont la même couche
         if n == 1:
