@@ -34,7 +34,7 @@ def learning_manager(batch, batch_test, parallel_learnings, activation_functions
     iterations_left = iterations
     errors_during_learning = np.zeros((iterations, parallel_learnings), dtype=np.ndarray)
     errors_during_test = np.zeros((iterations_test, parallel_learnings), dtype=np.ndarray)
-    mean_error_during_test = np.zeros((iterations//test_period, parallel_learnings), dtype=np.ndarray)
+    mean_error_during_test = np.zeros((iterations//test_period, parallel_learnings))
     output_list_learning = np.zeros((iterations, parallel_learnings), dtype=np.ndarray)
     output_list_test = np.zeros((iterations_test, parallel_learnings), dtype=np.ndarray)
     reference_list_learning = np.zeros((iterations, parallel_learnings), dtype=np.ndarray)
@@ -48,7 +48,6 @@ def learning_manager(batch, batch_test, parallel_learnings, activation_functions
             output_list_learning[iterations-iterations_left][i] = output
             reference = fonction_test(batch[iterations-iterations_left])
             reference_list_learning[iterations-iterations_left][i] = reference
-            print("output", output, "reference", reference)
             errors_during_learning[iterations-iterations_left][i] = net.error(output, reference)
             net.backprop(eta, batch[iterations-iterations_left], reference)
             iterations_left -= 1
@@ -60,8 +59,9 @@ def learning_manager(batch, batch_test, parallel_learnings, activation_functions
                     reference = fonction_test(batch_test[k])
                     reference_list_test[k][i] = reference
                     errors_during_test[k][i] = net.error(output, reference)
-                mean_error_during_test[iterations_left//test_period][i] = np.mean(errors_during_test, axis=0)
+                mean_error_during_test[iterations_left//test_period][i] = np.mean(errors_during_test, axis=0)[iterations_left//test_period][i]
 
+    print("mean", mean_error_during_test)
     abs_error_test =range(len(batch)//test_period)
     ord_error_test = [mean_error_during_test[k][-1] for k in range(len(mean_error_during_test))]
     abs_error_learning = range(iterations)

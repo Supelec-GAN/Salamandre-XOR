@@ -85,7 +85,7 @@ class NeuronLayer:
         return np.dot(out_influence, np.transpose(input_layer))
 
     ##
-    # @brief      Calculates the bias influence (whicj is out_influence)
+    # @brief      Calculates the bias influence (which is out_influence)
     def calculate_bias_influence(self, out_influence):
         return out_influence
 

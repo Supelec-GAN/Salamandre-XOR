@@ -36,7 +36,7 @@ class Network:
     # @return     La sortie de la dernière couche est la sortie finale
     #
     def compute(self, inputs):
-        inputs = np.reshape(inputs, (len(inputs),1))
+        inputs = np.reshape(inputs, (len(inputs), 1))
         self._layers_list[0].compute(inputs)
         for i in range(1, self._layers_count):
             self._layers_list[i].compute(self._layers_list[i - 1].output)
