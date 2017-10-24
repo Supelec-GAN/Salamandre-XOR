@@ -14,4 +14,4 @@ class Sigmoid(Function):
         return lambda x: 1/(1+np.exp(-self.mu*x))
 
     def derivate(self):
-        return lambda x: self.mu*np.exp(-self.mu*x)/(np.power(1+np.exp(-self.mu*x), 2))
+        return lambda x: self.mu*np.exp(self.mu*x)/(np.power(1+np.exp(self.mu*x), 2))

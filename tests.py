@@ -5,20 +5,19 @@ import Interface as interf
 
 
 
-iterations = [1000, 5000, 10000, 50000, 100000]
-eta = [0.001, 0.005, 0.01, 0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9]
+#iterations = [1000, 5000, 10000, 50000, 100000]
+#eta = [0.001, 0.005, 0.01, 0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9]
 
-
-iterations_test = 1000
+iterations = [10000]
+eta = [0.001]
+iterations_test = 3000
 
 
 activation_functions = np.array([Sigmoid(3), Sigmoid(3), Sigmoid(3)])
 neurons_count = np.array([2, 2, 2, 1])
-parallel_learnings = 100
-test_period = 100
+parallel_learnings = 5
+test_period = 400
 
-errors_during_learning = np.zeros((len(iterations), len(eta)), dtype=np.ndarray)
-errors_during_test = np.zeros((len(iterations), len(eta)), dtype=np.ndarray)
 
 
 for i in range(len(iterations)):
