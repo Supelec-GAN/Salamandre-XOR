@@ -1,6 +1,7 @@
 import numpy as np
 from xor.network import Network
 from function.sigmoid import Sigmoid
+from function.tanh import Tanh
 import Interface as interf
 
 
@@ -13,10 +14,10 @@ eta = [0.001]
 iterations_test = 3000
 
 
-activation_functions = np.array([Sigmoid(3), Sigmoid(3), Sigmoid(3)])
+activation_functions = np.array([Tanh(1.7159, 2/3), Tanh(1.7159, 2/3), Tanh(1.7159, 2/3)])
 neurons_count = np.array([2, 2, 2, 1])
 parallel_learnings = 5
-test_period = 400
+test_period = 100
 
 
 
