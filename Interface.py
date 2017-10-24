@@ -5,9 +5,9 @@ from xor.network import Network
 
 def fonction_test(input):       # Renvoie la réference attendue, celle ci est pour le XOR
     if input[0]*input[1] > 0:
-        return 1
-    else:
         return -1
+    else:
+        return 1
 
 
 def error_graphs(abs_error_test, ord_error_test, abs_error_learning, ord_error_learning, test_period, parrallel_learnings):
