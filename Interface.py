@@ -12,7 +12,7 @@ def fonction_test(input):       # Renvoie la réference attendue, celle ci est p
 
 def error_graphs(abs_error_test, ord_error_test, abs_error_learning, ord_error_learning, test_period, parrallel_learnings):
     plt.plot(abs_error_test, ord_error_test, 'x')
-    plt.ylabel("Erreur moyenne sur le batch de test")
+    plt.ylabel("Erreur moyenne sur le batch de test pour le dernier apprentissage")
     plt.xlabel("Occurences des tests")
     plt.title("Evolution de l'erreur effectuée toutes les " + str(test_period) + " itérations d'apprentissage")
     plt.show()
@@ -82,5 +82,7 @@ def learning_manager(batch, batch_test, parallel_learnings, activation_functions
 
     error_graphs(iteration_a_laquelle_batch_test, moyenne_erreur_sur_le_batch_test, iterations_effectuees,
                  moyenne_erreur_apprentissage, test_period, parallel_learnings)
+    print(errors_during_test)
+    print_grid_net(net,100)
 
     return errors_during_learning, errors_during_test

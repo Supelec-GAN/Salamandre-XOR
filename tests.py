@@ -10,12 +10,12 @@ import Interface as interf
 #eta = [0.001, 0.005, 0.01, 0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9]
 
 iterations = [10000]
-eta = [0.001]
+eta = [0.02]
 iterations_test = 3000
 
 
 activation_functions = np.array([Tanh(1.7159, 2/3), Tanh(1.7159, 2/3), Tanh(1.7159, 2/3)])
-neurons_count = np.array([2, 2, 2, 1])
+neurons_count = np.array([2, 3, 2, 1])
 parallel_learnings = 5
 test_period = 100
 
