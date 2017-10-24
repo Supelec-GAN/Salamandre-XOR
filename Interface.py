@@ -59,7 +59,7 @@ def learning_manager(batch, batch_test, parallel_learnings, activation_functions
                     reference = fonction_test(batch_test[k])
                     reference_list_test[k][i] = reference
                     errors_during_test[k][i] = net.error(output, reference)
-                mean_error_during_test[iterations_left//test_period][i] = np.mean(errors_during_test, axis=0)[iterations_left//test_period][i]
+                mean_error_during_test[iterations_left//test_period][i] = np.mean(errors_during_test, axis=0)[iterations_left//test_period]
 
     print("mean", mean_error_during_test)
     abs_error_test =range(len(batch)//test_period)
