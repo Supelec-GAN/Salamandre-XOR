@@ -18,13 +18,11 @@ activation_functions = np.array([Tanh(1.7159, 2/3), Tanh(1.7159, 2/3), Tanh(1.71
 neurons_count = np.array([2, 2, 2, 1])
 parallel_learnings = 1
 test_period = 100
-
-
+batch_test = 2 * np.random.random_sample((iterations_test, 2)) - 1
 
 for i in range(len(iterations)):
         for j in range(len(eta)):
                 batch = 2 * np.random.random_sample((iterations[i], 2)) - 1
-                batch_test = 2 * np.random.random_sample((iterations_test, 2)) - 1
                 errors = interf.learning_manager(batch, batch_test, parallel_learnings, activation_functions, neurons_count, eta[j], test_period)
                 errors_during_learning = errors[0]
                 errors_during_test = errors[1]
