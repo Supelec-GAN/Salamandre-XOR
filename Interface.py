@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 
 class Interface:
@@ -57,6 +58,16 @@ class Interface:
         plt.grid()
         plt.show()
 
+    def save_files(self, to_be_saved, name, parameters, new=1):
+        if new == 1:
+            date = time.localtime()
+            name = name + str(date[0]) + str(date[1]) + str(date[2]) + "_" + str(date[3]) + str(date[4]) \
+                   + str(date[5]) + ".txt"
+        file = open(name, "a")
+        file.write(parameters)
+        file.write(to_be_saved)
+        file.close()
+
     def learning_manager(self, batch, batch_test, parallel_learnings, eta, test_period):
         iterations = len(batch)
         iterations_test = len(batch_test)
@@ -76,8 +87,12 @@ class Interface:
             (iterations, parallel_learnings), dtype=np.ndarray)
         reference_list_test = np.zeros(
             (iterations_test, parallel_learnings), dtype=np.ndarray)
+        parallel_outputs = np.zeros((parallel_learnings, 1))
 
         net = self.network
+
+        parameters = "Nb de couches : " + str(net.layers_neuron_count) + ", Fonctions d'activation : " + str(
+            net.layers_activation_function) + "Eta : " + str(eta) + "\n"
 
         for i in range(parallel_learnings):
             net.reset()
@@ -115,9 +130,16 @@ class Interface:
         moyenne_erreur_apprentissage = np.mean(
             mean_error_during_learning, axis=1)
 
+        self.save_files(errors_during_test, "errors_during_test", parameters)
+        self.save_files(mean_error_during_test, "mean_error_during_test", parameters)
+        self.save_files(errors_during_learning, "errors_during_learning", parameters)
+        self.save_files(mean_error_during_learning, "mean_error_during_learning", parameters)
+        self.save_files(parallel_outputs, "outputs", parameters)
+
+
+
         self.error_graphs(iteration_a_laquelle_batch_test, moyenne_erreur_sur_le_batch_test,
                           iterations_effectuees, moyenne_erreur_apprentissage, test_period, parallel_learnings)
-        print(mean_error_during_learning)
         self.print_grid_net(100)
 
         return errors_during_learning, errors_during_test
