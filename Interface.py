@@ -19,15 +19,16 @@ class Interface:
     #     else:
     #         return 1.7159
 
-    def error_graphs(self, abs_error_test, ord_error_test, abs_error_learning, ord_error_learning, test_period, parrallel_learnings, error_bar):
+    def error_graphs(self, abs_error_test, ord_error_test, abs_error_learning, ord_error_learning, test_period,
+                     parrallel_learnings, error_bar, eta, neuron_count):
         plt.figure()
-        plt.errorbar(abs_error_test*100, ord_error_test/1.7159, error_bar/1.7159, None, fmt='--o', ecolor='g', capthick=1)
+        plt.errorbar(abs_error_test, ord_error_test, error_bar/1.7159, None, fmt='x', ecolor='k', capthick=2)
         plt.ylabel("Erreur moyenne sur le batch de test pour les " +
                    str(parrallel_learnings) + " runs")
         plt.xlabel("Apprentissages")
         plt.title("Evolution de l'erreur, test effectué tous les " +
                   str(test_period) + " apprentissages")
-        plt.suptitle("eta =")
+        plt.suptitle("eta =" + str(eta) + "\n" + "Réseau en " + str(neuron_count[1:]))
         plt.show()
 
         # plt.plot(abs_error_learning, ord_error_learning, 'x')
@@ -107,15 +108,17 @@ class Interface:
                     mean_error_during_test[(
                         iterations - iterations_left) // test_period][i] = np.mean(errors_during_test[-100:][i])
 
-        iteration_a_laquelle_batch_test = range(len(batch) // test_period)
+        iteration_a_laquelle_batch_test = np.array(range(len(batch) // test_period))*100
         moyenne_erreur_sur_le_batch_test = np.mean(mean_error_during_test, 1)
         iterations_effectuees = range(iterations // 100)
         moyenne_erreur_apprentissage = np.mean(
             mean_error_during_learning, axis=1)
         std_batch_test = np.std(mean_error_during_test, 1)
-        error_bar = 2 * std_batch_test / np.sqrt(parrallel_learnings)
+        error_bar = 2 * std_batch_test / np.sqrt(parallel_learnings)
+
         self.error_graphs(iteration_a_laquelle_batch_test, moyenne_erreur_sur_le_batch_test,
-                          iterations_effectuees, moyenne_erreur_apprentissage, test_period, parallel_learnings, error_bar)
+                          iterations_effectuees, moyenne_erreur_apprentissage, test_period,
+                          parallel_learnings, error_bar, eta, net._layers_neuron_count)
         self.print_grid_net(100)
 
         return errors_during_learning, errors_during_test
