@@ -2,9 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from xor.network import Network
 
-def error_bar(array, parrallel_learnings):
-    std = np.std(array)
-    return (2*std/np.sqrt(parrallel_learnings))
+
 
 def fonction_test(input):       # Renvoie la réference attendue, celle ci est pour le XOR
     if input[0]*input[1] > 0:
@@ -13,12 +11,13 @@ def fonction_test(input):       # Renvoie la réference attendue, celle ci est p
         return 1.7159
 
 
-def error_graphs(abs_error_test, ord_error_test, abs_error_learning, ord_error_learning, test_period, parrallel_learnings):
+def error_graphs(abs_error_test, ord_error_test, abs_error_learning, ord_error_learning, test_period, parrallel_learnings, error_bar):
     plt.figure()
-    plt.errorbar(abs_error_test, ord_error_test,error_bar(ord_error_test, parrallel_learnings),None, fmt = '--o', ecolor = 'g', capthick=1)
-    plt.ylabel("Erreur moyenne sur le batch de test pour les" + str(parrallel_learnings) + "apprentissages")
-    plt.xlabel("Occurences des tests")
-    plt.title("Evolution de l'erreur, test effectué tous les " + str(test_period) + "apprentissages")
+    plt.errorbar(abs_error_test*100, ord_error_test/1.7159, error_bar/1.7159, None, fmt='x', ecolor='k', capthick=2)
+    plt.ylabel("Erreur moyenne sur le batch de test pour les " + str(parrallel_learnings) + " runs")
+    plt.xlabel("Apprentissages")
+    plt.title("Evolution de l'erreur, test effectué tous les " + str(test_period) + " apprentissages")
+    plt.suptitle('eta = ' +str() )
     plt.show()
 
     #plt.plot(abs_error_learning, ord_error_learning, 'x')
@@ -61,6 +60,7 @@ def learning_manager(batch, batch_test, parallel_learnings, activation_functions
     for i in range(parallel_learnings):
         net = Network(neurons_count, activation_functions)
         iterations_left = iterations
+        print(i)
 
         while iterations_left > 1:
             output = net.compute(batch[iterations-iterations_left])
@@ -69,7 +69,7 @@ def learning_manager(batch, batch_test, parallel_learnings, activation_functions
             reference_list_learning[iterations-iterations_left][i] = reference
             errors_during_learning[iterations-iterations_left][i] = net.error(output, reference)
             if (iterations-iterations_left) % 100 == 0 and iterations != iterations_left :
-                mean_error_during_learning[(iterations-iterations_left) // 100][i] = np.mean(errors_during_learning[iterations-iterations_left-100:iterations-iterations_left][i])
+                mean_error_during_learning[(iterations-iterations_left) // 100][i] = np.mean(errors_during_learning[iterations-iterations_left-100:iterations-iterations_left, i])
             net.backprop(eta, batch[iterations-iterations_left], reference)
             iterations_left -= 1
 
@@ -80,16 +80,17 @@ def learning_manager(batch, batch_test, parallel_learnings, activation_functions
                     reference = fonction_test(batch_test[k])
                     reference_list_test[k][i] = reference
                     errors_during_test[k][i] = net.error(output, reference)
-                mean_error_during_test[(iterations-iterations_left)//test_period][i] = np.mean(errors_during_test[-100:][i])
+                mean_error_during_test[(iterations-iterations_left)//test_period][i] = np.mean(errors_during_test[-100:, i])
 
     iteration_a_laquelle_batch_test = range(len(batch)//test_period)
     moyenne_erreur_sur_le_batch_test = np.mean(mean_error_during_test,1)
+    std_batch_test = np.std(mean_error_during_test, 1)
+    error_bar = 2*std_batch_test/np.sqrt(parrallel_learnings)
     iterations_effectuees = range(iterations // 100)
     moyenne_erreur_apprentissage = np.mean(mean_error_during_learning, axis=1)
 
     error_graphs(iteration_a_laquelle_batch_test, moyenne_erreur_sur_le_batch_test, iterations_effectuees,
-                 moyenne_erreur_apprentissage, test_period, parallel_learnings)
-    print(mean_error_during_learning)
+                 moyenne_erreur_apprentissage, test_period, parallel_learnings, error_bar)
     print_grid_net(net,100)
 
     return errors_during_learning, errors_during_test
