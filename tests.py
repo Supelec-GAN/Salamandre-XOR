@@ -1,7 +1,7 @@
 import numpy as np
 from xor.network import Network
 from fonction import Sigmoid, Tanh, XorTest
-from Interface import Interface
+from interface import Interface
 
 
 # iterations = [1000, 5000, 10000, 50000, 100000]

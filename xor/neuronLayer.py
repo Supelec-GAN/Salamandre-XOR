@@ -9,7 +9,7 @@ class NeuronLayer:
         self._input_size = input_size
         self._output_size = output_size
         self._weights = np.transpose(np.random.randn(input_size, output_size))
-        self._bias = np.zeros((output_size, 1))            # Vecteur colonne
+        self._bias = np.zeros((output_size, 1))              # Vecteur colonne
         self._activation_function = activation_function
         self.activation_levels = np.zeros((output_size, 1))  # Vecteur colonne
         self.output = np.zeros((output_size, 1))             # Vecteur colonne
