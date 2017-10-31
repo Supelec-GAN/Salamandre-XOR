@@ -2,6 +2,9 @@ import numpy as np
 from xor.network import Network
 from fonction import Sigmoid, Tanh, XorTest
 from interface import Interface
+import run as r
+import dataProcessor as dp
+import errorGraphs as eg
 
 
 # iterations = [1000, 5000, 10000, 50000, 100000]
