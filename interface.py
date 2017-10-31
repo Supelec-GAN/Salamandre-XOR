@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import time
+
 
 
 class Interface:
@@ -12,9 +12,6 @@ class Interface:
         self.network = network
         self.fonction_test = fonction_test
 
-    def error_bar(self, array, parrallel_learnings):
-        std = np.std(array)
-        return (2 * std / np.sqrt(parrallel_learnings))
 
     # def fonction_test(input):       # Renvoie la réference attendue, celle ci est pour le XOR
     #     if input[0] * input[1] > 0:
@@ -22,15 +19,16 @@ class Interface:
     #     else:
     #         return 1.7159
 
-    def error_graphs(self, abs_error_test, ord_error_test, abs_error_learning, ord_error_learning, test_period, parrallel_learnings):
+    def error_graphs(self, abs_error_test, ord_error_test, abs_error_learning, ord_error_learning, test_period,
+                     parrallel_learnings, error_bar, eta, neuron_count):
         plt.figure()
-        plt.errorbar(abs_error_test, ord_error_test, self.error_bar(
-            ord_error_test, parrallel_learnings), None, fmt='--o', ecolor='g', capthick=1)
-        plt.ylabel("Erreur moyenne sur le batch de test pour les" +
-                   str(parrallel_learnings) + "apprentissages")
-        plt.xlabel("Occurences des tests")
+        plt.errorbar(abs_error_test, ord_error_test, error_bar/1.7159, None, fmt='x', ecolor='k', capthick=2)
+        plt.ylabel("Erreur moyenne sur le batch de test pour les " +
+                   str(parrallel_learnings) + " runs")
+        plt.xlabel("Apprentissages")
         plt.title("Evolution de l'erreur, test effectué tous les " +
-                  str(test_period) + "apprentissages")
+                  str(test_period) + " apprentissages")
+        plt.suptitle("eta =" + str(eta) + "\n" + "Réseau en " + str(neuron_count[1:]))
         plt.show()
 
         # plt.plot(abs_error_learning, ord_error_learning, 'x')
@@ -58,16 +56,6 @@ class Interface:
         plt.grid()
         plt.show()
 
-    def save_files(self, to_be_saved, name, parameters, new=1):
-        if new == 1:
-            date = time.localtime()
-            name = name + str(date[0]) + str(date[1]) + str(date[2]) + "_" + str(date[3]) + str(date[4]) \
-                   + str(date[5]) + ".txt"
-        file = open(name, "a")
-        file.write(parameters)
-        file.write(to_be_saved)
-        file.close()
-
     def learning_manager(self, batch, batch_test, parallel_learnings, eta, test_period):
         iterations = len(batch)
         iterations_test = len(batch_test)
@@ -87,12 +75,8 @@ class Interface:
             (iterations, parallel_learnings), dtype=np.ndarray)
         reference_list_test = np.zeros(
             (iterations_test, parallel_learnings), dtype=np.ndarray)
-        parallel_outputs = np.zeros((parallel_learnings, 1))
 
         net = self.network
-
-        parameters = "Nb de couches : " + str(net.layers_neuron_count) + ", Fonctions d'activation : " + str(
-            net.layers_activation_function) + "Eta : " + str(eta) + "\n"
 
         for i in range(parallel_learnings):
             net.reset()
@@ -124,22 +108,17 @@ class Interface:
                     mean_error_during_test[(
                         iterations - iterations_left) // test_period][i] = np.mean(errors_during_test[-100:][i])
 
-        iteration_a_laquelle_batch_test = range(len(batch) // test_period)
+        iteration_a_laquelle_batch_test = np.array(range(len(batch) // test_period))*100
         moyenne_erreur_sur_le_batch_test = np.mean(mean_error_during_test, 1)
         iterations_effectuees = range(iterations // 100)
         moyenne_erreur_apprentissage = np.mean(
             mean_error_during_learning, axis=1)
-
-        self.save_files(errors_during_test, "errors_during_test", parameters)
-        self.save_files(mean_error_during_test, "mean_error_during_test", parameters)
-        self.save_files(errors_during_learning, "errors_during_learning", parameters)
-        self.save_files(mean_error_during_learning, "mean_error_during_learning", parameters)
-        self.save_files(parallel_outputs, "outputs", parameters)
-
-
+        std_batch_test = np.std(mean_error_during_test, 1)
+        error_bar = 2 * std_batch_test / np.sqrt(parallel_learnings)
 
         self.error_graphs(iteration_a_laquelle_batch_test, moyenne_erreur_sur_le_batch_test,
-                          iterations_effectuees, moyenne_erreur_apprentissage, test_period, parallel_learnings)
+                          iterations_effectuees, moyenne_erreur_apprentissage, test_period,
+                          parallel_learnings, error_bar, eta, net._layers_neuron_count)
         self.print_grid_net(100)
 
         return errors_during_learning, errors_during_test

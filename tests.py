@@ -14,7 +14,7 @@ iterations_test = 3000
 
 activation_functions = np.array([Tanh(1.7159, 2/3), Tanh(1.7159, 2/3), Tanh(1.7159, 2/3)])
 neurons_count = np.array([2, 2, 2, 1])
-parallel_learnings = 1
+parallel_learnings = 3
 test_period = 100
 batch_test = 2 * np.random.random_sample((iterations_test, 2)) - 1
 
