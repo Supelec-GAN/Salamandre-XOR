@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-
 class Interface:
     """
     @brief      Classe pour lancer des tests, effectuer l'enregistrement de valeurs et affichage
@@ -22,7 +21,7 @@ class Interface:
     def error_graphs(self, abs_error_test, ord_error_test, abs_error_learning, ord_error_learning, test_period,
                      parrallel_learnings, error_bar, eta, neuron_count):
         plt.figure()
-        plt.errorbar(abs_error_test, ord_error_test, error_bar/1.7159, None, fmt='x', ecolor='k', capthick=2)
+        plt.errorbar(abs_error_test, ord_error_test, error_bar, None, fmt='x', ecolor='k', capthick=2)
         plt.ylabel("Erreur moyenne sur le batch de test pour les " +
                    str(parrallel_learnings) + " runs")
         plt.xlabel("Apprentissages")
@@ -40,14 +39,14 @@ class Interface:
     def print_grid_net(self, grid):
         mini = self.fonction_test.mini
         maxi = self.fonction_test.maxi
-        ab = np.linspace(mini, maxi, grid)
-        od = np.linspace(mini, maxi, grid)
+        ab = np.linspace(-1, +1, grid)
+        od = np.linspace(-1, +1, grid)
         abs_affiche = []
         ord_affiche = []
 
         for a in ab:
             for o in od:
-                if self.network.compute(np.array([[a], [o]])) > mini:
+                if self.network.compute(np.array([[a], [o]])) > (mini+maxi)/2:
                     abs_affiche.append(a)
                     ord_affiche.append(o)
 
