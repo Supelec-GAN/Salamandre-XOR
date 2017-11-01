@@ -30,6 +30,8 @@ class Run:
             (self.iterations, parallel_learnings), dtype=np.ndarray)
         self.reference_list_test = np.zeros(
             (self.iterations_test, parallel_learnings), dtype=np.ndarray)
+        self.tests_passed = np.zeros(
+            parallel_learnings, dtype=np.ndarray)
 
     def test(self, i, iterations_left):
         for k in range(len(self.batch_test)):
@@ -38,8 +40,11 @@ class Run:
             reference = self.fonction_test.out()(self.batch_test[k][0], self.batch_test[k][1])
             self.reference_list_test[k][i] = reference
             self.errors_during_test[k][i] = self.network.error(output, reference)
-        self.mean_error_during_test[(self.iterations - iterations_left) // self.test_period][i] = np.mean(
-            self.errors_during_test[-100:][i])
+            if self.errors_during_test[k][i] > reference :
+                self.tests_passed[i]+=1
+        self.tests_passed[i] = self.tests_passed[i]/len(self.batch_test)
+        #self.mean_error_during_test[(self.iterations - iterations_left) // self.test_period][i] = np.mean(
+            #self.errors_during_test[-100:][i])
         checkout_test = self.mean_error_during_test[(self.iterations - iterations_left) // self.test_period][i] < 0.04
 
         return checkout_test
@@ -52,7 +57,7 @@ class Run:
             net.reset()
             iterations_left = self.iterations
 
-            while iterations_left > 1:
+            while iterations_left > 1 and not checkout_test:
                 output = net.compute(self.batch[self.iterations - iterations_left])
                 self.output_list_learning[self.iterations - iterations_left][i] = output
                 reference = self.fonction_test.out()(
@@ -67,6 +72,6 @@ class Run:
                 iterations_left -= 1
 
                 if (self.iterations - iterations_left) % self.test_period == 0:
-                    self.test(i, iterations_left)
+                    checkout_test = self.test(i, iterations_left)
 
-        return self.errors_during_learning, self.errors_during_test
+        return self.errors_during_learning, self.tests_passed
