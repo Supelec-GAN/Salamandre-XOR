@@ -20,7 +20,7 @@ class DataProcessor:
 
         return iterations_effectuees, moyenne_erreur_apprentissage
 
-    def standard_deviation(self, mean_error_during_test):
+    def error_bar(self, mean_error_during_test):
         std_batch_test = np.std(mean_error_during_test, 1)
         error_bar = 2 * std_batch_test / np.sqrt(self.parallel_learnings)
         return error_bar

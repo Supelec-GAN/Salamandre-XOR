@@ -31,7 +31,7 @@ class Run:
         self.reference_list_test = np.zeros(
             (self.iterations_test, parallel_learnings), dtype=np.ndarray)
         self.tests_passed = np.zeros(
-            parallel_learnings, dtype=np.ndarray)
+            (self.iterations//test_period, parallel_learnings), dtype=np.ndarray)
 
     def test(self, i, iterations_left):
         for k in range(len(self.batch_test)):
@@ -41,8 +41,8 @@ class Run:
             self.reference_list_test[k][i] = reference
             self.errors_during_test[k][i] = self.network.error(output, reference)
             if self.errors_during_test[k][i] > reference :
-                self.tests_passed[i]+=1
-        self.tests_passed[i] = self.tests_passed[i]/len(self.batch_test)
+                self.tests_passed[(self.iterations - iterations_left) // self.test_period][i]+=1
+        self.tests_passed[(self.iterations - iterations_left) // self.test_period][i] = self.tests_passed[(self.iterations - iterations_left) // self.test_period][i]/len(self.batch_test)
         #self.mean_error_during_test[(self.iterations - iterations_left) // self.test_period][i] = np.mean(
             #self.errors_during_test[-100:][i])
         checkout_test = self.mean_error_during_test[(self.iterations - iterations_left) // self.test_period][i] < 0.04
