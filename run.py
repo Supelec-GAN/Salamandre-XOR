@@ -56,6 +56,7 @@ class Run:
         for i in range(self.parallel_learnings):
             net.reset()
             iterations_left = self.iterations
+            checkout_test = False
 
             while iterations_left > 1 and not checkout_test:
                 output = net.compute(self.batch[self.iterations - iterations_left])

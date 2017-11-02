@@ -22,5 +22,5 @@ class DataProcessor:
 
     def error_bar(self, mean_error_during_test):
         std_batch_test = np.std(mean_error_during_test, 1)
-        error_bar = 2 * std_batch_test / np.sqrt(self.parallel_learnings)
+        error_bar = 2 * std_batch_test / np.sqrt(int(self.parallel_learnings))
         return error_bar
