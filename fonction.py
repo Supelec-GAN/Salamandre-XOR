@@ -78,4 +78,4 @@ class XorTest(Function):
         self.maxi = maxi
 
     def out(self):
-        return lambda x, y: self.maxi*((x > 0) ^ (y > 0)) - self.mini*(1-(x > 0) ^ (y > 0))
+        return lambda x, y: self.maxi*((x > 0) ^ (y > 0)) - self.mini*(1-((x > 0) ^ (y > 0)))
