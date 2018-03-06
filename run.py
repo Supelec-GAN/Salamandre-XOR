@@ -40,7 +40,7 @@ class Run:
             reference = self.fonction_test.out()(self.batch_test[k][0], self.batch_test[k][1])
             self.reference_list_test[k][i] = reference
             self.errors_during_test[k][i] = self.network.error(output, reference)
-            if self.errors_during_test[k][i] > reference :
+            if self.errors_during_test[k][i] > reference:
                 self.tests_passed[(self.iterations - iterations_left) // self.test_period][i]+=1
         self.tests_passed[(self.iterations - iterations_left) // self.test_period][i] = self.tests_passed[(self.iterations - iterations_left) // self.test_period][i]/len(self.batch_test)
         #self.mean_error_during_test[(self.iterations - iterations_left) // self.test_period][i] = np.mean(

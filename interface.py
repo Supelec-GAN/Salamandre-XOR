@@ -18,7 +18,7 @@ class Interface:
     #     else:
     #         return 1.7159
 
-    def error_graphs(self, abs_error_test, ord_error_test, abs_error_learning, ord_error_learning, test_period,
+    def error_graphs(self, abs_error_test, ord_error_test, test_period,
                      parrallel_learnings, error_bar, eta, neuron_count):
         plt.figure()
         plt.errorbar(abs_error_test, ord_error_test, error_bar, None, fmt='x', ecolor='k', capthick=2)
