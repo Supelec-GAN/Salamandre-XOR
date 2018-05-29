@@ -37,22 +37,18 @@ class Interface:
         # plt.show()
 
     def print_grid_net(self, grid):
-        mini = self.fonction_test.mini
-        maxi = self.fonction_test.maxi
         ab = np.linspace(-1, +1, grid)
         od = np.linspace(-1, +1, grid)
-        abs_affiche = []
-        ord_affiche = []
+
+        resultats = np.zeros((len(ab), len(od)))
 
         for a in ab:
             for o in od:
-                if self.network.compute(np.array([[a], [o]])) > (mini+maxi)/2:
-                    abs_affiche.append(a)
-                    ord_affiche.append(o)
+                resultats = self.network.compute(np.array([[a], [o]]))
 
-        plt.plot(abs_affiche, ord_affiche, 'o')
-        plt.axis([-1, 1, -1, 1])
-        plt.grid()
+
+        plt.imshow(resultats, extent=[-1, 1, -1, 1], vmin=-1, vmax=1, interpolation='none', origin='lower')
+        plt.colorbar()
         plt.show()
 
     def learning_manager(self, batch, batch_test, parallel_learnings, eta, test_period):
@@ -105,7 +101,7 @@ class Interface:
                         reference_list_test[k][i] = reference
                         errors_during_test[k][i] = net.error(output, reference)
                     mean_error_during_test[(
-                        iterations - iterations_left) // test_period][i] = np.mean(errors_during_test[-100:][i])
+                                               iterations - iterations_left) // test_period][i] = np.mean(errors_during_test[-100:][i])
 
         iteration_a_laquelle_batch_test = np.array(range(len(batch) // test_period))*100
         moyenne_erreur_sur_le_batch_test = np.mean(mean_error_during_test, 1)

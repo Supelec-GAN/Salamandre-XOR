@@ -59,6 +59,7 @@ class Run:
             checkout_test = False
 
             while iterations_left > 1:
+                print(iterations_left)
                 output = net.compute(self.batch[self.iterations - iterations_left])
                 self.output_list_learning[self.iterations - iterations_left][i] = output
                 reference = self.fonction_test.out()(
