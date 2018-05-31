@@ -33,7 +33,7 @@ interface = Interface(net, xor)
 
 for i in range(len(iterations)):
         for j in range(len(eta)):
-                batch = np.random.random_sample((iterations[i],2))*(xor.maxi-xor.mini) + xor.mini
+                batch = np.random.random_sample((iterations[i], 2))*(xor.maxi-xor.mini) + xor.mini
                 r = Run(net, xor, batch, batch_test, parallel_learnings, eta[j], test_period)
                 tests_passed = r.learning_manager()[0]
                 dp = DataProcessor(parallel_learnings, iterations, test_period)
