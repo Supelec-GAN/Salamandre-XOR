@@ -42,10 +42,9 @@ class Interface:
 
         resultats = np.zeros((len(ab), len(od)))
 
-        for a in ab:
-            for o in od:
-                resultats = self.network.compute(np.array([[a], [o]]))
-
+        for i in range(len(ab)):
+            for j in range(len(od)):
+                resultats[i][j] = self.network.compute(np.array([[ab[i]], [od[j]]]))
 
         plt.imshow(resultats, extent=[-1, 1, -1, 1], vmin=-1, vmax=1, interpolation='none', origin='lower')
         plt.colorbar()
