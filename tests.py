@@ -11,7 +11,7 @@ from dataInterface import DataInterface
 # iterations = [1000, 5000, 10000, 50000, 100000]
 #eta = [0.001, 0.005, 0.01, 0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9]
 
-iterations = [100000]
+iterations = [10000]
 eta = [0.2]
 iterations_test = 1
 
@@ -33,7 +33,7 @@ interface = Interface(net, xor)
 
 for i in range(len(iterations)):
         for j in range(len(eta)):
-                batch = 2*np.random.random_sample((iterations[i],2))-1
+                batch = np.random.random_sample((iterations[i],2))*(xor.maxi-xor.mini) + xor.mini
                 r = Run(net, xor, batch, batch_test, parallel_learnings, eta[j], test_period)
                 tests_passed = r.learning_manager()[0]
                 dp = DataProcessor(parallel_learnings, iterations, test_period)
