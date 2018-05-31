@@ -43,6 +43,23 @@ class Sigmoid(Function):
 
     def derivate(self):
         return lambda x: self.mu*np.exp(self.mu*x)/(np.power(1+np.exp(self.mu*x), 2))
+        
+
+class SigmoidCentered(Function):
+    """
+    @brief      Classe définissant une sigmoïde formelle
+    """
+
+    def __init__(self, mu=1, maxi=1, mini=-1):
+        self.mu = mu
+        self.max = maxi
+        self.min = mini
+
+    def out(self):
+        return lambda x: (self.max - self.min)/(1+np.exp(-self.mu*x)) + self.min
+
+    def derivate(self):
+        return lambda x:  (self.max - self.min)*self.mu*np.exp(self.mu*x)/(np.power(1+np.exp(self.mu*x), 2))
 
 
 class Tanh(Function):

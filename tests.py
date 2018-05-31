@@ -1,6 +1,6 @@
 import numpy as np
 from brain.network import Network
-from fonction import Sigmoid, Tanh, XorTest
+from fonction import Sigmoid, Tanh, XorTest, SigmoidCentered
 from interface import Interface
 from run import Run
 from dataProcessor import DataProcessor
@@ -11,16 +11,16 @@ from dataInterface import DataInterface
 # iterations = [1000, 5000, 10000, 50000, 100000]
 #eta = [0.001, 0.005, 0.01, 0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9]
 
-iterations = [10000]
+iterations = [100000]
 eta = [0.2]
-iterations_test = 3000
+iterations_test = 1
 
 
 activation_functions = np.array(
-    [Sigmoid(1), Sigmoid(1), Sigmoid(1)])
+    [SigmoidCentered(1), SigmoidCentered(1), SigmoidCentered(1)])
 neurons_count = np.array([2, 2, 1])
 parallel_learnings = 1
-test_period = 100
+test_period = 1000
 batch_test = np.random.random_sample((iterations_test, 2))
 
 net = Network(neurons_count, activation_functions)
@@ -33,7 +33,7 @@ interface = Interface(net, xor)
 
 for i in range(len(iterations)):
         for j in range(len(eta)):
-                batch = np.random.random_sample((iterations[i],2))*(xor.maxi-xor.mini) + xor.mini
+                batch = 2*np.random.random_sample((iterations[i],2))-1
                 r = Run(net, xor, batch, batch_test, parallel_learnings, eta[j], test_period)
                 tests_passed = r.learning_manager()[0]
                 dp = DataProcessor(parallel_learnings, iterations, test_period)
